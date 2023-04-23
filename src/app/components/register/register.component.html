@@ -1,0 +1,16 @@
+<form [formGroup]="registerFormGroup" class="d-grid gap-2 col-6 mx-auto" (ngSubmit)="onSubmit()">
+    <h2 class="text-center">register</h2>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email" placeholder="Email...">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" formControlName="password" placeholder="Password...">
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="name" class="form-control" formControlName="name" placeholder="Name...">
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="registerFormGroup.invalid">Submit</button>
+</form>
