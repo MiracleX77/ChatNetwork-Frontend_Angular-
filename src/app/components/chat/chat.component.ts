@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as SockJS from 'sockjs-client';
 import { IChatMessage } from 'src/app/interfaces/i-chat-message';
-import { IChatNameResponse } from 'src/app/interfaces/i-chat-name-response';
+import { IChatRoomResponse } from 'src/app/interfaces/i-chat-room-response';
 import { ChatService } from 'src/app/services/chat.service';
 import * as Stomp from 'stompjs'
 
@@ -14,12 +14,16 @@ import * as Stomp from 'stompjs'
 export class ChatComponent implements OnInit{
   private stompClient: any;
   isConnected = false;
+  nameConnected = ""
   private ENDPOINT = "http://localhost:8080/socket"
-  private CHANNEL = "/topic/chat"
+  private CHANNEL_CHAT = "/topic/chat"
+  private CHANNEL_ROOM = "/topic/room"
+
+
 
   messages: IChatMessage[] = [];
 
-  users: IChatNameResponse[] = [];
+  users: IChatRoomResponse[] = [];
 
   chatFormGroup: FormGroup = new FormGroup({
     message: new FormControl('',Validators.required),
@@ -32,6 +36,7 @@ export class ChatComponent implements OnInit{
 
   ngOnInit(): void {
       this.connectWebSocket();
+      this.getDataOfUser()
 
   }
   private connectWebSocket(){
@@ -41,23 +46,32 @@ export class ChatComponent implements OnInit{
     let that = this;
     this.stompClient.connect({},function(){
       that.isConnected = true;
-      // that.subscribeToGlobalChat();
+      that.subscribeToGlobalChat();
+      that.subscribeToGlobalRoom();
+    })
+  }
+  private subscribeToGlobalRoom(){
+    let that = this;
+    this.stompClient.subscribe(this.CHANNEL_ROOM,(message:any) =>{
+      let newuser = JSON.parse(message.body) as IChatRoomResponse
+      that.users.push(newuser)
     })
   }
 
-  // private subscribeToGlobalChat(){
-  //   let that = this;
-  //   this.stompClient.subscribe(this.CHANNEL,(message:any) =>{
-  //     let newMessage = JSON.parse(message.body) as IChatMessage
-  //     that.messages.push(newMessage)
-  //   })
-  // }
+  private subscribeToGlobalChat(){
+    let that = this;
+    this.stompClient.subscribe(this.CHANNEL_CHAT,(message:any) =>{
+      let newMessage = JSON.parse(message.body) as IChatMessage
+      that.messages.push(newMessage)
+    })
+  }
   onSubmit(){
     let message = this.chatFormGroup.controls['message'].value;
     if(!this.isConnected){
       alert("Please connect WebSocket");
       return
     }
+    alert(message)
     this.chatService.postMessage(message).subscribe({
       next:(response) =>{
       },
@@ -75,15 +89,24 @@ export class ChatComponent implements OnInit{
     }
     this.chatService.connectUser(sendTo).subscribe({
       next:(response) =>{
-        alert(response);
       },
       error:(error)=>{
-      alert(error.error.error)
+      alert("Not found name")
       }
     });
 
 
 
+  }
+  getDataOfUser(){
+    this.chatService.getData().subscribe({
+      next:(response) =>{
+        this.users = response.rooms;
+      },
+      error:(error)=>{
+      alert("Not found name")
+      }
+    });
   }
 
 }
