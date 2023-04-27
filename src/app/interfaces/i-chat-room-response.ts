@@ -1,4 +1,4 @@
 export interface IChatRoomResponse {
-    nametalker?:string;
+    receiver:string;
     
 }

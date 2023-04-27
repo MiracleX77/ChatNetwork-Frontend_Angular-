@@ -14,16 +14,18 @@ import * as Stomp from 'stompjs'
 export class ChatComponent implements OnInit{
   private stompClient: any;
   isConnected = false;
-  nameConnected = ""
+  nameUser:string = ""
   private ENDPOINT = "http://localhost:8080/socket"
   private CHANNEL_CHAT = "/topic/chat"
-  private CHANNEL_ROOM = "/topic/room"
+  private CHANNEL_ROOM = "/topic/create-room"
 
 
 
   messages: IChatMessage[] = [];
 
   users: IChatRoomResponse[] = [];
+
+  receiver:string = "";
 
   chatFormGroup: FormGroup = new FormGroup({
     message: new FormControl('',Validators.required),
@@ -35,9 +37,10 @@ export class ChatComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-      this.connectWebSocket();
-      this.getDataOfUser()
 
+      this.connectWebSocket();
+      this.getDataOfUser();
+      this.getNameOfUser();
   }
   private connectWebSocket(){
     let ws = new SockJS(this.ENDPOINT);
@@ -71,8 +74,7 @@ export class ChatComponent implements OnInit{
       alert("Please connect WebSocket");
       return
     }
-    alert(message)
-    this.chatService.postMessage(message).subscribe({
+    this.chatService.postMessage(message,this.receiver).subscribe({
       next:(response) =>{
       },
       error:(error)=>{
@@ -104,9 +106,23 @@ export class ChatComponent implements OnInit{
         this.users = response.rooms;
       },
       error:(error)=>{
-      alert("Not found name")
+      alert("ERR: Get data")
       }
     });
+  }
+  receiverNow(receiverName:string){
+    this.receiver=receiverName;
+
+  }
+  getNameOfUser(){
+    this.chatService.getNameOfUser().subscribe({
+      next:(response) =>{
+        this.nameUser = response.name;
+      },
+      error:(error)=>{
+        alert("ERR: Name Not found")
+      }
+    })
   }
 
 }

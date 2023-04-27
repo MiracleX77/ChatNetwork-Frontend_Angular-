@@ -1,5 +1,5 @@
 export interface IChatMessage {
-    from?:string;
+    receiver?:string;
     message?:string;
     created?:Date;
 }
