@@ -12,6 +12,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { CookieService } from 'ngx-cookie-service';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { ChatRoomComponent } from './components/chat-room/chat-room.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
     ChatComponent,
     LoginComponent,
     RegisterComponent,
-    HeaderComponent
+    HeaderComponent,
+    ChatRoomComponent
 
   ],
   imports: [
