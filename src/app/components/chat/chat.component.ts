@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import * as SockJS from 'sockjs-client';
 import { IChatMessage } from 'src/app/interfaces/i-chat-message';
 import { IChatRoomResponse } from 'src/app/interfaces/i-chat-room-response';
@@ -16,12 +17,8 @@ export class ChatComponent implements OnInit{
   isConnected = false;
   nameUser:string = ""
   private ENDPOINT = "http://localhost:8080/socket"
-  private CHANNEL_CHAT = "/topic/chat"
   private CHANNEL_ROOM = "/topic/create-room"
 
-
-
-  messages: IChatMessage[] = [];
 
   users: IChatRoomResponse[] = [];
 
@@ -33,6 +30,7 @@ export class ChatComponent implements OnInit{
   });
 
   constructor(
+    private router:Router,
     private chatService:ChatService
   ){}
 
@@ -49,7 +47,6 @@ export class ChatComponent implements OnInit{
     let that = this;
     this.stompClient.connect({},function(){
       that.isConnected = true;
-      that.subscribeToGlobalChat();
       that.subscribeToGlobalRoom();
     })
   }
@@ -61,28 +58,7 @@ export class ChatComponent implements OnInit{
     })
   }
 
-  private subscribeToGlobalChat(){
-    let that = this;
-    this.stompClient.subscribe(this.CHANNEL_CHAT,(message:any) =>{
-      let newMessage = JSON.parse(message.body) as IChatMessage
-      that.messages.push(newMessage)
-    })
-  }
-  onSubmit(){
-    let message = this.chatFormGroup.controls['message'].value;
-    if(!this.isConnected){
-      alert("Please connect WebSocket");
-      return
-    }
-    this.chatService.postMessage(message,this.receiver).subscribe({
-      next:(response) =>{
-      },
-      error:(error)=>{
-      alert(error.error.error)
-      }
-    });
-    
-  }
+
   onSubmitToConnect(){
     let sendTo = this.chatFormGroup.controls['sendTo'].value;
     if(!this.isConnected){
@@ -97,8 +73,6 @@ export class ChatComponent implements OnInit{
       }
     });
 
-
-
   }
   getDataOfUser(){
     this.chatService.getData().subscribe({
@@ -112,7 +86,7 @@ export class ChatComponent implements OnInit{
   }
   receiverNow(receiverName:string){
     this.receiver=receiverName;
-
+    this.router.navigate(['/chatroom'],{queryParams:{receiver: this.receiver}});
   }
   getNameOfUser(){
     this.chatService.getNameOfUser().subscribe({
@@ -124,5 +98,6 @@ export class ChatComponent implements OnInit{
       }
     })
   }
+  
 
 }

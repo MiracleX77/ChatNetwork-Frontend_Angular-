@@ -1,12 +1,32 @@
-<form [formGroup]="loginFormGroup" class="d-grid gap-2 col-6 mx-auto" (ngSubmit)="onSubmit()">
-    <h2 class="text-center">Login</h2>
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" formControlName="email" placeholder="Email...">
+
+<form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit()">
+<div class="container">
+    <div class="row">
+      <div class="title">
+        <h1>
+          Let’s Login <br />
+          to have <br />
+          fantastic night!
+        </h1>
+      </div>
+      <div class="user">
+        <h1 class="user-label">Username</h1>
+        <input class="input" type="email" formControlName="email" placeholder="Email..."/>
+      </div>
+      <div class="pass">
+        <h1 class="pass-label">Password</h1>
+        <input class="input" type="password" formControlName="password" placeholder="Password..."/>
+      </div>
+      <div class="login">
+        <button  type="submit" class="login" [disabled]="loginFormGroup.invalid" >Login</button>
+      </div>
+      
     </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" formControlName="password" placeholder="Password...">
-    </div>
-    <button type="submit" class="btn btn-primary" [disabled]="loginFormGroup.invalid">Sign in</button>
+</div>
 </form>
+<div class="register">
+    <button class="login" (click)="doRegister()">Register</button>
+</div>
+  
+  
+  

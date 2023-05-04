@@ -1,0 +1,63 @@
+
+    body {
+      background-color: #1510b4;
+    }
+  
+    .row {
+      grid-row: auto;
+      display: grid;
+      padding-left: 10%;
+    }
+  
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+  
+    .title {
+      color: #FFBD59;
+      padding-top: 10%;
+    }
+  
+    .user {
+      padding-top: 10%;
+    }
+  
+    .user-label {
+      color: #5CE1E6;
+    }
+  
+    .pass-label {
+      color: #F26BDC;
+    }
+  
+    .input {
+      width: 300px;
+      height: 40px;
+      background-color: #D9D9D9;
+      border-radius: 20px;
+    }
+  
+    .login {
+      margin-top: 20px;
+      height: 50px;
+      width: 300px;
+    }
+  
+    button {
+      background-color: #FFBD59;
+      border-radius: 20px;
+      color: #1D1C40;
+      font-size: 20px;
+    }
+  
+    .register {
+      padding-top: 30px;
+      text-align: center;
+    }
+  
+    .register a {
+      color: #ffffff;
+      font-size: 20px;
+      text-decoration: none;
+    }

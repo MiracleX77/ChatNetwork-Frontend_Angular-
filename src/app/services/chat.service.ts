@@ -6,6 +6,7 @@ import { IChatResponse } from '../interfaces/i-chat-response';
 import {  IChatRoomResponse } from '../interfaces/i-chat-room-response';
 import { IChatRoomsResponse } from '../interfaces/i-chat-rooms-response';
 import { IChatName } from '../interfaces/i-chat-name';
+import { IChatMessages } from '../interfaces/i-chat-messages';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,9 @@ export class ChatService {
   getNameOfUser():Observable<IChatName>{
     let url = "http://localhost:8080/chat/get-name";
     return this.http.get<IChatName>(url);
+  }
+  getMessagesOfRoom(receiver:string):Observable<IChatMessages>{
+    let url = `http://localhost:8080/chat/get-messages-${receiver}`;
+    return this.http.get<IChatMessages>(url);
   }
 }

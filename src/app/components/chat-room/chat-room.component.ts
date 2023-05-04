@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as SockJS from 'sockjs-client';
 import { IChatMessage } from 'src/app/interfaces/i-chat-message';
 import { IChatRoomResponse } from 'src/app/interfaces/i-chat-room-response';
@@ -22,7 +23,6 @@ export class ChatRoomComponent implements OnInit{
 
   messages: IChatMessage[] = [];
 
-
   receiver:string = "";
 
   chatFormGroup: FormGroup = new FormGroup({
@@ -31,12 +31,20 @@ export class ChatRoomComponent implements OnInit{
   });
 
   constructor(
-    private chatService:ChatService
-  ){}
+    private chatService:ChatService,
+    private route : ActivatedRoute,
+    private router: Router
+
+  ){
+  }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params =>{
+      this.receiver = params['receiver'];
+    })
       this.connectWebSocket();
       this.getNameOfUser();
+      this.getMessageOfRoom()
   }
 
   private connectWebSocket(){
@@ -54,6 +62,7 @@ export class ChatRoomComponent implements OnInit{
     let that = this;
     this.stompClient.subscribe(this.CHANNEL_CHAT,(message:any) =>{
       let newMessage = JSON.parse(message.body) as IChatMessage
+      console.log(newMessage)
       that.messages.push(newMessage)
     })
   }
@@ -71,9 +80,7 @@ export class ChatRoomComponent implements OnInit{
       }
     });
   }
-  receiverNow(receiverName:string){
-    this.receiver=receiverName;
-  }
+
   getNameOfUser(){
     this.chatService.getNameOfUser().subscribe({
       next:(response) =>{
@@ -84,6 +91,20 @@ export class ChatRoomComponent implements OnInit{
       }
     })
   }
+  getMessageOfRoom(){
+    this.chatService.getMessagesOfRoom(this.receiver).subscribe({
+      next:(response) =>{
+        this.messages = response.messages;
+      },
+      error:(error)=>{
+        alert("ERR: Name Not found")
+      }
+    })
+  }
+  doBack(){
+    this.router.navigate(['/chat'])
+  }
+
 }
 
 

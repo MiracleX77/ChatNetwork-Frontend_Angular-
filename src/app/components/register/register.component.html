@@ -1,4 +1,4 @@
-<form [formGroup]="registerFormGroup" class="d-grid gap-2 col-6 mx-auto" (ngSubmit)="onSubmit()">
+<!-- <form [formGroup]="registerFormGroup" class="d-grid gap-2 col-6 mx-auto" (ngSubmit)="onSubmit()">
     <h2 class="text-center">register</h2>
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
@@ -13,4 +13,43 @@
         <input type="name" class="form-control" formControlName="name" placeholder="Name...">
     </div>
     <button type="submit" class="btn btn-primary" [disabled]="registerFormGroup.invalid">Submit</button>
+</form> -->
+<form [formGroup]="registerFormGroup" (ngSubmit)="onSubmit()">
+<div class="column">
+    <div class="title">
+      <h1>
+        Register now!
+        <br />
+        party now!
+      </h1>
+    </div>
+  
+    <div class="text_input">
+  
+      <div class="user">
+        <h1 class="user-label">Username</h1>
+        <input type="email" class="form-control" formControlName="email" placeholder="Email...">
+      </div>
+  
+      <div class="pass">
+        <h1 class="pass-label">Password</h1>
+        <input type="password" class="form-control" formControlName="password" placeholder="Password...">
+      </div>
+  
+      <div class="confirm-pass">
+        <h1 class="confirm-pass-label">Name</h1>
+        <input type="name" class="form-control" formControlName="name" placeholder="Name...">
+      </div>
+    </div>
+  
+    <div class="radio_input">
+      <div class="checkbox">
+        <input type="radio" id="radio" name="radio" value="radio">
+        <label for="checkbox">Are you sure you read policy</label>
+      </div>
+    </div>
+  
+    <button type="submit" class="summit" [disabled]="registerFormGroup.invalid">Submit</button>
+  </div>
 </form>
+  
